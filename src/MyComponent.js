@@ -61,13 +61,15 @@ const Progress = ({
     arrProgressColor = progressColor.length > 0 ? progressColor.split(',').reverse() : [],
     arrTrackColor = trackColor.length > 0 ? trackColor.split(',').reverse() : [];
   
+  const size = startSize - 50 + (trackSize*2 + spaceSize*2) * arrProgress.length;
+  
   return (
     <Box
       {...props}
       
-      padding="40px"
-      width="200px"
-      height="200px"
+      padding="32px"
+      width={`${size}px`}
+      height={`${size}px`}
       background={fillColor}
       position="relative"
     >
