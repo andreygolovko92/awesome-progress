@@ -3,7 +3,64 @@ import atomize from "@quarkly/atomize";
 import { Box } from '@quarkly/widgets';
 import ProgressLabel from 'react-progress-label';
 
-const Progress = props => {
+const ProgressTrack = ({
+  startDegree,
+  trackSize,
+  startSize,
+  spaceSize,
+  fillColor,
+  
+  progress,
+  progressColor,
+  trackColor,
+  
+  numb
+}) => {
+  const size = startSize - 50 + (trackSize*2 + spaceSize*2) * numb;
+  
+  return (
+    <Box
+      top={`calc(50% - ${size/2}px)`}
+      left={`calc(50% - ${size/2}px)`}
+      width={`${size}px`}
+      height={`${size}px`}
+      position="absolute"
+    >
+      <ProgressLabel
+        progress={progress}
+        startDegree={startDegree}
+        progressWidth={trackSize}
+        trackWidth={trackSize-2}
+        trackBorderWidth={1}
+        trackBorderColor={trackColor}
+        cornersWidth={trackSize/2}
+        size={size}
+        fillColor={fillColor}
+        trackColor={trackColor}
+        progressColor={progressColor}
+      />
+    </Box> 
+  )
+}
+
+const Progress = ({
+  startDegree,
+  trackSize,
+  startSize,
+  spaceSize,
+  fillColor,
+  
+  progress,
+  progressColor,
+  trackColor,
+  
+  ...props
+}) => {
+  const
+    arrProgress = progress.length > 0 ? progress.split(',').reverse() : [],
+    arrProgressColor = progressColor.length > 0 ? progressColor.split(',').reverse() : [],
+    arrTrackColor = trackColor.length > 0 ? trackColor.split(',').reverse() : [];
+  
   return (
     <Box
       {...props}
@@ -11,92 +68,108 @@ const Progress = props => {
       padding="40px"
       width="200px"
       height="200px"
-      background="#000000"
+      background={fillColor}
       position="relative"
     >
-      <Box
-        top={`calc(50% - ${ 100 }px)`}
-        left={`calc(50% - ${ 100 }px)`}
-        width={`${ 200 }px`}
-        height={`${ 200 }px`}
-        position="absolute"
-      >
-        <ProgressLabel
-          progress={40}
-          startDegree={0}
-          progressWidth={20}
-          trackWidth={18}
-          trackBorderWidth={1}
-          trackBorderColor="#440000"
-          cornersWidth={10}
-          size={200}
-          fillColor="#000000"
-          trackColor="#440000"
-          progressColor="#FF0000"
+      { arrProgress.map((item, i) => (
+        <ProgressTrack
+          startDegree={startDegree}
+          trackSize={trackSize}
+          startSize={startSize}
+          spaceSize={spaceSize}
+          fillColor={fillColor}
+          
+          progress={arrProgress[i]}
+          progressColor={arrProgressColor[i]}
+          trackColor={arrTrackColor[i]}
+          
+          numb={arrProgress.length - i}
         />
-      </Box>
-      
-      <Box
-        top={`calc(50% - ${ 75 }px)`}
-        left={`calc(50% - ${ 75 }px)`}
-        width={`${ 150 }px`}
-        height={`${ 150 }px`}
-        position="absolute"
-      >
-        <ProgressLabel
-          progress={50}
-          startDegree={0}
-          progressWidth={20}
-          trackWidth={18}
-          trackBorderWidth={1}
-          trackBorderColor="#004400"
-          cornersWidth={10}
-          size={150}
-          fillColor="#000000"
-          trackColor="#004400"
-          progressColor="#00FF00"
-        />
-      </Box>
-      
-      <Box
-        top={`calc(50% - ${ 50 }px)`}
-        left={`calc(50% - ${ 50 }px)`}
-        width={`${ 100 }px`}
-        height={`${ 100 }px`}
-        position="absolute"
-      >
-        <ProgressLabel
-          progress={80}
-          startDegree={0}
-          progressWidth={20}
-          trackWidth={18}
-          trackBorderWidth={1}
-          trackBorderColor="#000044"
-          cornersWidth={10}
-          size={100}
-          fillColor="#000000"
-          trackColor="#000044"
-          progressColor="#0000FF"
-        />
-      </Box>
-      
+      ))}
     </Box>
   )
 }
 
 export default atomize(Progress)({
   name: "Progress",
-  effects: {
-    hover: ":hover"
-  },
   normalize: true,
   mixins: true,
   description: {
-    // past here description for your component
     en:
       "Progress — my awesome component",
+    ru:
+      "Progress — мой восхитительный компонент :)"
   },
   propInfo: {
+    startDegree: {
+      title: 'Угол начала отсчета:',
+      control: 'text',
+      type: 'number',
+      category: 'Global',
+      weight: 1,
+    },
+    trackSize: {
+      title: 'Ширина трека:',
+      control: 'text',
+      type: 'number',
+      category: 'Global',
+      weight: 1,
+    },
+    startSize: {
+      title: 'Начальный размер треков:',
+      control: 'text',
+      type: 'number',
+      category: 'Global',
+      weight: 1,
+    },
+    spaceSize: {
+      title: 'Отступы между треками:',
+      control: 'text',
+      type: 'number',
+      category: 'Global',
+      weight: 1,
+    },
+    fillColor: {
+      title: 'Цвет заливки отступов:',
+      control: 'color',
+      type: 'string',
+      category: 'Global',
+      weight: 1,
+    },
     
+    progress: {
+      title: 'Прогресс в процентах:',
+      control: 'text',
+      type: 'number',
+      multiply: true,
+      category: 'Tracks',
+      weight: 1,
+    },
+    progressColor: {
+      title: 'Цвет выполненного прогресса:',
+      control: 'color',
+      type: 'string',
+      multiply: true,
+      category: 'Tracks',
+      weight: 1,
+    },
+    trackColor: {
+     title: 'Цвет трека прогресса:',
+      control: 'color',
+      type: 'string',
+      multiply: true,
+      category: 'Tracks',
+      weight: 1,
+    },
   }
+}, {
+  startDegree: '0',
+  trackSize: '20',
+  startSize: '100',
+  spaceSize: '5',
+  fillColor: '#000000',
+  
+  progress: '80,50,40',
+  progressColor: '#03a9f4,#8bc34a,#f44336',
+  trackColor: '#012C4E,#1A350F,#5C0E0E',
 });
